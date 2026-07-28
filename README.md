@@ -1,8 +1,8 @@
 # Stock Analyzer 
 
-> Professional-grade stock analysis tool combining fundamental analysis,
-> technical indicators, quantitative models, and social sentiment —
-> built for retail investors who want hedge-fund-level insights.
+> Professional stock analysis tool combining fundamental analysis,
+> technical indicators, quantitative models, and social sentiment
+> built for retail investors who want hedge fund level insights.
 
 ## Features
 

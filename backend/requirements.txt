@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+yfinance
+pandas
+numpy
+requests
+python-dotenv
+beautifulsoup4
+lxml
+praw
+vaderSentiment
+feedparser
+gdeltdoc

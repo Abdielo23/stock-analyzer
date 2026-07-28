@@ -1,6 +1,4 @@
 """Module 13 — Policy & Political Risk.
-
-Truth Social's RSS feed is dead and Congress.gov's DEMO_KEY has no working search, so we pull raw data and filter/score it ourselves.
 """
 
 import time

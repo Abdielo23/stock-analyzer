@@ -66,8 +66,6 @@ GLOBAL_MARKETS = {
     "^FTSE": "FTSE 100", "^N225": "Nikkei 225", "^HSI": "Hang Seng",
 }
 
-# reuters is DNS-dead and ap_news's rsshub bridge 403s, but we keep them here so
-# sources_status reports them as "failed" instead of silently dropping them.
 # benzinga's "markets" feed URL was repurposed and just returns 0 entries (not an error).
 NEWS_SOURCES = {
     "reuters": {

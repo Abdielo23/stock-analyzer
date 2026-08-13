@@ -1,5 +1,5 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
-import { CheckCircle2, XCircle, MinusCircle, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import useFetch from "../hooks/useFetch";
 import { fetchQuantitative } from "../api/stockApi";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -18,13 +18,6 @@ function StatRow({ label, value }) {
 }
 
 const STRATEGY_LABELS = { buy_and_hold: "Buy & Hold", sma_crossover: "SMA Crossover", rsi_mean_reversion: "RSI Mean Reversion" };
-
-function quantSignalMeta(signal) {
-  const s = String(signal || "").toLowerCase();
-  if (s.includes("sell")) return { Icon: XCircle, color: "var(--red)" };
-  if (s.includes("buy")) return { Icon: CheckCircle2, color: "var(--green)" };
-  return { Icon: MinusCircle, color: "var(--text-secondary)" };
-}
 
 export default function Quantitative({ ticker }) {
   const { data, loading, error } = useFetch(fetchQuantitative, ticker);
@@ -56,17 +49,12 @@ export default function Quantitative({ ticker }) {
   const strategyRows = Object.entries(STRATEGY_LABELS)
     .map(([key, label]) => ({ id: key, strategy: label, ...(backtesting[key] || {}), isBest: backtesting.best_strategy === key }));
 
-  const { Icon: QuantIcon, color: quantIconColor } = quantSignalMeta(quant_signal);
-
   return (
     <div style={{ maxWidth: 1200 }}>
       <h1 style={{ fontSize: 22, marginBottom: 20 }}>Quantitative Analysis — {ticker}</h1>
 
       <SectionCard title="Quant Signal">
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "16px 0" }}>
-          <QuantIcon size={22} color={quantIconColor} />
-          <SignalBadge signal={quant_signal} size="lg" />
-        </div>
+        <SignalBadge signal={quant_signal} size="lg" />
       </SectionCard>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: 18 }}>

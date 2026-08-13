@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { fetchPrice, fetchFundamental, fetchTechnical, fetchCalendar, fetchFundamentals } from "../api/stockApi";
 import LoadingSpinner from "../components/LoadingSpinner";
 import MetricCard from "../components/MetricCard";
 import SignalBadge from "../components/SignalBadge";
 import SectionCard from "../components/SectionCard";
+import ChartTooltip from "../components/ChartTooltip";
 import { fmtLarge, fmtNum } from "../utils/format";
 
 export default function Overview({ ticker }) {
@@ -103,18 +104,38 @@ export default function Overview({ ticker }) {
 
       {/* Price chart */}
       {chartData.length > 0 && (
-        <SectionCard title="Price History (Close, SMA20, SMA50)">
+        <SectionCard
+          title="Price History (Close, SMA20, SMA50)"
+          right={
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: "var(--text-secondary)" }}>
+                <span style={{ width: 9, height: 9, borderRadius: 2, background: "var(--accent)" }} /> Close
+              </span>
+              <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: "var(--text-secondary)" }}>
+                <span style={{ width: 9, height: 2, background: "var(--green)" }} /> SMA20
+              </span>
+              <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: "var(--text-secondary)" }}>
+                <span style={{ width: 9, height: 2, background: "var(--yellow)" }} /> SMA50
+              </span>
+            </div>
+          }
+        >
           <ResponsiveContainer width="100%" height={340}>
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="date" minTickGap={40} tick={{ fontSize: 12, fill: "var(--text-secondary)" }} />
-              <YAxis domain={["auto", "auto"]} tick={{ fontSize: 12, fill: "var(--text-secondary)" }} />
-              <Tooltip contentStyle={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: 8 }} />
-              <Legend />
-              <Line type="monotone" dataKey="Close" stroke="var(--accent)" dot={false} strokeWidth={2} />
-              <Line type="monotone" dataKey="SMA20" stroke="var(--green)" dot={false} strokeWidth={1.5} />
-              <Line type="monotone" dataKey="SMA50" stroke="var(--yellow)" dot={false} strokeWidth={1.5} />
-            </LineChart>
+            <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+              <defs>
+                <linearGradient id="closeGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+              <XAxis dataKey="date" minTickGap={40} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "var(--text-secondary)" }} dy={8} />
+              <YAxis domain={["auto", "auto"]} axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "var(--text-secondary)" }} dx={-8} />
+              <Tooltip content={<ChartTooltip />} cursor={{ stroke: "var(--text-secondary)", strokeWidth: 1, strokeDasharray: "4 4" }} />
+              <Area type="monotone" dataKey="Close" name="Close" stroke="var(--accent)" strokeWidth={2.5} fill="url(#closeGradient)" activeDot={{ r: 5, strokeWidth: 0 }} />
+              <Line type="monotone" dataKey="SMA20" name="SMA20" stroke="var(--green)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
+              <Line type="monotone" dataKey="SMA50" name="SMA50" stroke="var(--yellow)" strokeWidth={1.5} strokeDasharray="4 4" dot={false} />
+            </ComposedChart>
           </ResponsiveContainer>
         </SectionCard>
       )}
